@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EightQueen {
@@ -28,7 +29,6 @@ public class EightQueen {
             List<char[][]> validBoards = addQueen(board);
             x++;
             for (char[][] someBoard : validBoards) {
-                printBoard(someBoard);
                 char[][] returnBoard = solveBoard(someBoard, x);
                 if (returnBoard != null) {
                     return returnBoard;
@@ -38,23 +38,30 @@ public class EightQueen {
         return null;
     }
 
-    public static List<char[][]> addQueen(char[][] board){
+    private static List<char[][]> addQueen(char[][] board){
         List<char[][]> boards = new ArrayList<>();
-        char[][] newBoard = board.clone();
+        char[][] newBoard = new char[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            newBoard[i] = Arrays.copyOf(board[i], board[i].length);
+        }
+
+
         for (int i = 0; i < newBoard.length; i++) {
             for (int j = 0; j < newBoard[i].length; j++) {
-                if (newBoard[i][j] != 'i' && newBoard[i][j]!= 'Q') {
+                if (newBoard[i][j] != 'i' && newBoard[i][j]!= 'Q' && !boards.contains(fillInvalid(newBoard, i, j))) {
                     boards.add(fillInvalid(newBoard, i, j));
-
                 }
             }
+
         }
         return boards;
     }
 
-    public static char[][] fillInvalid(char[][] board, int x, int y){
-        char[][] newBoard = board.clone();
-
+    private static char[][] fillInvalid(char[][] nBoard, int x, int y){
+        char[][] newBoard = new char[nBoard.length][nBoard[0].length];
+        for (int i = 0; i < nBoard.length; i++) {
+            newBoard[i] = Arrays.copyOf(nBoard[i], nBoard[i].length);
+        }
         newBoard[x][y] = 'Q';
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -98,9 +105,10 @@ public class EightQueen {
         return newBoard;
     }
 
-    public static void printBoard(char[][] Board) {
+    public static void printBoard(char[][] nBoard) {
+        char[][] board = nBoard.clone();
         StringBuilder myBoard = new StringBuilder();
-            for (char[] row : Board) {
+            for (char[] row : board) {
             StringBuilder rows = new StringBuilder();
             for (char number : row) {
                 rows.append(number);
